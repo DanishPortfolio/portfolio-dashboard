@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Danish — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1ec;
+    --bg-soft: #ebe5dc;
+    --bg-card: #ffffff;
+    --text: #1f1d1a;
+    --text-muted: #6b665e;
+    --text-faint: #9d978e;
+    --border: rgba(31, 29, 26, 0.06);
+    --border-strong: rgba(31, 29, 26, 0.12);
+    --shadow-sm: 0 1px 2px rgba(31, 29, 26, 0.04), 0 0 0 1px rgba(31, 29, 26, 0.02);
+    --shadow-md: 0 4px 12px rgba(31, 29, 26, 0.06), 0 1px 3px rgba(31, 29, 26, 0.04);
+
+    --peach: #ffd4b8;
+    --peach-deep: #ff9b6a;
+    --mint: #b8e8d4;
+    --mint-deep: #5fc499;
+    --lilac: #d8c8f0;
+    --lilac-deep: #a085d4;
+    --sky: #c8dff5;
+    --sky-deep: #6ba4dc;
+    --rose: #f5c5d0;
+    --rose-deep: #d97a93;
+
+    --positive: #5fc499;
+    --positive-soft: #e8f7ef;
+    --negative: #e88a8a;
+    --negative-soft: #fbeaea;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    background-image:
+      radial-gradient(ellipse 800px 600px at 10% -10%, rgba(255, 212, 184, 0.4), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 95% 5%, rgba(216, 200, 240, 0.3), transparent 60%),
+      radial-gradient(ellipse 600px 400px at 50% 100%, rgba(184, 232, 212, 0.25), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  .num { font-family: 'Geist Mono', 'SF Mono', monospace; font-feature-settings: "tnum" 1; letter-spacing: -0.01em; }
+  .serif { font-family: 'Instrument Serif', serif; }
+
+  .app { max-width: 1500px; margin: 0 auto; padding: 36px 32px 80px; }
+
+  /* Loading state */
+  #loadingState {
+    position: fixed; inset: 0;
+    display: grid; place-items: center;
+    background: var(--bg);
+    z-index: 9999;
+    transition: opacity 0.4s;
+  }
+  #loadingState.hidden { opacity: 0; pointer-events: none; }
+  .loading-content { text-align: center; }
+  .loading-content .mark {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--peach) 0%, var(--rose) 100%);
+    margin: 0 auto 16px;
+    display: grid; place-items: center;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 28px; color: white;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.05); opacity: 0.8; } }
+  .loading-content .text { font-family: 'Instrument Serif', serif; font-size: 18px; font-style: italic; color: var(--text-muted); }
+
+  /* Banner for chart fallback */
+  .chart-fallback {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-faint);
+    font-size: 13px;
+    background: var(--bg-soft);
+    border-radius: 16px;
+    margin: 12px 0;
+  }
+
+  header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 16px; }
+  .brand-mark {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--peach) 0%, var(--rose) 100%);
+    box-shadow: var(--shadow-md);
+    display: grid; place-items: center;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: 24px; color: white;
+  }
+  h1 { font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 32px; letter-spacing: -0.01em; line-height: 1; }
+  h1 em { font-style: italic; background: linear-gradient(90deg, var(--peach-deep) 0%, var(--rose-deep) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .subtitle { margin-top: 4px; font-size: 13px; color: var(--text-muted); }
+  .header-pills { display: flex; gap: 10px; align-items: center; }
+  .pill {
+    padding: 10px 18px; background: var(--bg-card); border-radius: 100px;
+    box-shadow: var(--shadow-sm); font-size: 12px; color: var(--text-muted);
+    cursor: pointer; transition: all 0.25s ease; border: none; font-family: inherit;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .pill:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint-deep); }
+
+  .hero {
+    background: var(--bg-card); border-radius: 28px;
+    padding: 32px 36px; margin-bottom: 24px;
+    box-shadow: var(--shadow-md);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -100px; right: -100px;
+    width: 300px; height: 300px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255, 212, 184, 0.4), transparent 70%);
+    pointer-events: none;
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 32px; position: relative; z-index: 1; }
+  .hero-stat .label { font-size: 11px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; font-weight: 500; }
+  .hero-stat .value { font-family: 'Instrument Serif', serif; font-size: 44px; font-weight: 400; letter-spacing: -0.02em; line-height: 1; margin-bottom: 6px; }
+  .hero-stat .value.smaller { font-size: 32px; }
+  .hero-stat .value em { font-style: italic; color: var(--peach-deep); }
+  .hero-stat .change { font-size: 12px; color: var(--text-muted); font-family: 'Geist Mono', monospace; }
+  .hero-stat .change.up { color: var(--mint-deep); }
+  .hero-stat .change.down { color: var(--rose-deep); }
+  .change-pill { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 100px; background: var(--positive-soft); color: var(--positive); font-weight: 600; font-size: 11px; margin-right: 6px; }
+  .change-pill.down { background: var(--negative-soft); color: var(--negative); }
+
+  .main { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-bottom: 24px; }
+
+  .portfolios { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pcard { background: var(--bg-card); border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-sm); transition: all 0.3s ease; }
+  .pcard:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .pcard-head { padding: 20px 22px 16px; }
+  .pcard-head.tint-peach { background: linear-gradient(135deg, var(--peach) 0%, transparent 100%); }
+  .pcard-head.tint-mint  { background: linear-gradient(135deg, var(--mint) 0%, transparent 100%); }
+  .pcard-head.tint-lilac { background: linear-gradient(135deg, var(--lilac) 0%, transparent 100%); }
+  .pcard-head.tint-sky   { background: linear-gradient(135deg, var(--sky) 0%, transparent 100%); }
+  .pcard-name { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.01em; line-height: 1; margin-bottom: 4px; }
+  .pcard-name em { font-style: italic; }
+  .pcard-meta { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; }
+
+  .pcard-input { margin: 0 16px 14px; padding: 14px 18px; background: var(--bg-soft); border-radius: 16px; display: flex; align-items: center; justify-content: space-between; }
+  .pcard-input label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; }
+  .pcard-input input {
+    background: white; border: 1px solid var(--border); border-radius: 12px;
+    padding: 8px 12px; width: 130px; text-align: right;
+    font-family: 'Geist Mono', monospace; font-size: 14px; font-weight: 600;
+    color: var(--peach-deep); transition: all 0.2s;
+  }
+  .pcard-input input:focus { outline: none; border-color: var(--peach-deep); box-shadow: 0 0 0 3px rgba(255, 155, 106, 0.15); }
+  .pcard-input input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  .ptable { padding: 0 22px 20px; }
+  .prow { display: grid; grid-template-columns: 1fr auto auto; gap: 16px; padding: 11px 0; align-items: center; border-bottom: 1px solid var(--border); }
+  .prow:last-child { border-bottom: none; }
+  .prow .ticker { font-family: 'Geist Mono', monospace; font-weight: 600; font-size: 13px; }
+  .prow .desc { font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+  .prow .pct { font-family: 'Geist Mono', monospace; font-size: 12px; color: var(--text-muted); padding: 3px 10px; background: var(--bg-soft); border-radius: 100px; font-weight: 500; }
+  .prow .amt { font-family: 'Geist Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text); min-width: 90px; text-align: right; }
+  .prow .amt.empty { color: var(--text-faint); }
+
+  .side-panel { background: var(--bg-card); border-radius: 24px; box-shadow: var(--shadow-sm); overflow: hidden; }
+  .panel-head { padding: 22px 24px 16px; border-bottom: 1px solid var(--border); }
+  .panel-head .row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+  .panel-title { font-family: 'Instrument Serif', serif; font-size: 22px; letter-spacing: -0.01em; }
+  .panel-title em { font-style: italic; color: var(--peach-deep); }
+  .seg { display: inline-flex; background: var(--bg-soft); border-radius: 100px; padding: 3px; gap: 2px; }
+  .seg button { padding: 6px 14px; font-size: 11px; border: none; background: transparent; color: var(--text-muted); border-radius: 100px; cursor: pointer; font-family: 'Geist Mono', monospace; font-weight: 500; transition: all 0.2s; }
+  .seg button.active { background: white; color: var(--text); box-shadow: var(--shadow-sm); }
+
+  .holdings { padding: 8px 0; }
+  .hrow { display: grid; grid-template-columns: 1.3fr 1fr 1fr; padding: 12px 24px; align-items: center; border-bottom: 1px solid var(--border); }
+  .hrow:last-child { border-bottom: none; }
+  .hrow:hover { background: var(--bg-soft); }
+  .hrow .ticker { font-family: 'Geist Mono', monospace; font-weight: 600; font-size: 13px; }
+  .hrow .holding-desc { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+  .ret-cell { font-family: 'Geist Mono', monospace; font-size: 12px; text-align: right; font-weight: 600; }
+  .ret-cell .badge { display: inline-block; padding: 4px 10px; border-radius: 100px; background: var(--positive-soft); color: var(--positive); }
+  .ret-cell.neg .badge { background: var(--negative-soft); color: var(--negative); }
+  .hrow.benchmark { background: linear-gradient(90deg, rgba(255, 212, 184, 0.2), transparent); }
+
+  .tracker { background: var(--bg-card); border-radius: 24px; padding: 24px 28px; margin-bottom: 24px; box-shadow: var(--shadow-sm); }
+  .tracker-head { margin-bottom: 20px; }
+  .tracker-head h2 { font-family: 'Instrument Serif', serif; font-size: 26px; font-weight: 400; letter-spacing: -0.01em; }
+  .tracker-head h2 em { font-style: italic; color: var(--peach-deep); }
+  .tracker-head .sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .tracker-portfolio-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tracker-portfolio-tabs button {
+    padding: 8px 16px; border-radius: 100px; border: 1px solid var(--border-strong);
+    background: white; color: var(--text-muted); cursor: pointer; font-family: inherit;
+    font-size: 12px; font-weight: 500; transition: all 0.2s;
+  }
+  .tracker-portfolio-tabs button:hover { border-color: var(--peach-deep); }
+  .tracker-portfolio-tabs button.active {
+    background: linear-gradient(135deg, var(--peach) 0%, var(--rose) 100%);
+    color: white; border-color: transparent;
+    box-shadow: 0 4px 12px rgba(217, 122, 147, 0.25);
+  }
+
+  .month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 24px; }
+  .month-card { background: var(--bg-soft); border-radius: 16px; padding: 14px 16px; transition: all 0.2s; border: 1px solid transparent; }
+  .month-card:hover { background: white; border-color: var(--peach); box-shadow: var(--shadow-sm); }
+  .month-card.has-data { background: linear-gradient(135deg, rgba(184, 232, 212, 0.3), white); border-color: rgba(95, 196, 153, 0.2); }
+  .month-card .m-label { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .month-card input { width: 100%; background: transparent; border: none; font-family: 'Geist Mono', monospace; font-size: 16px; font-weight: 600; color: var(--text); padding: 0; outline: none; }
+  .month-card input::placeholder { color: var(--text-faint); font-weight: 400; }
+  .month-card .change-tag { margin-top: 6px; font-size: 10px; font-family: 'Geist Mono', monospace; color: var(--text-faint); font-weight: 500; }
+  .month-card .change-tag.up { color: var(--mint-deep); }
+  .month-card .change-tag.down { color: var(--rose-deep); }
+
+  .tracker-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .ts-stat { padding: 14px 18px; background: var(--bg-soft); border-radius: 16px; }
+  .ts-stat .l { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
+  .ts-stat .v { font-family: 'Instrument Serif', serif; font-size: 22px; line-height: 1; }
+  .ts-stat .v.up { color: var(--mint-deep); font-style: italic; }
+  .ts-stat .v.down { color: var(--rose-deep); font-style: italic; }
+
+  .charts { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-bottom: 24px; }
+  .chart-card { background: var(--bg-card); border-radius: 24px; padding: 24px 28px; box-shadow: var(--shadow-sm); }
+  .chart-card h3 { font-family: 'Instrument Serif', serif; font-size: 20px; font-weight: 400; letter-spacing: -0.01em; margin-bottom: 4px; }
+  .chart-card h3 em { font-style: italic; color: var(--peach-deep); }
+  .chart-card .chart-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 18px; }
+  .chart-container { position: relative; height: 300px; }
+
+  footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; font-size: 11px; color: var(--text-faint); letter-spacing: 0.04em; }
+  footer em { font-family: 'Instrument Serif', serif; font-style: italic; }
+
+  @media (max-width: 1200px) {
+    .main { grid-template-columns: 1fr; }
+    .charts { grid-template-columns: 1fr; }
+    .tracker-summary { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 720px) {
+    .app { padding: 20px 16px; }
+    .portfolios { grid-template-columns: 1fr; }
+    .hero-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    .hero-stat .value { font-size: 32px; }
+    h1 { font-size: 26px; }
+    .month-grid { grid-template-columns: repeat(2, 1fr); }
+    .tracker-summary { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loadingState">
+  <div class="loading-content">
+    <div class="mark">D</div>
+    <div class="text">loading your portfolio...</div>
+  </div>
+</div>
+
+<div class="app">
+
+  <header>
+    <div class="brand">
+      <div class="brand-mark">D</div>
+      <div>
+        <h1>Danish<em>'s</em> Atelier</h1>
+        <div class="subtitle">Halal portfolios · aggressive growth · Apr 2026</div>
+      </div>
+    </div>
+    <div class="header-pills">
+      <button class="pill"><span class="dot"></span>Live</button>
+      <button class="pill" id="exportBtn">⤓ Export CSV</button>
+    </div>
+  </header>
+
+  <div class="hero">
+    <div class="hero-grid">
+      <div class="hero-stat">
+        <div class="label">Total Allocated</div>
+        <div class="value"><em id="totalInvested">$0</em></div>
+        <div class="change" id="totalChange">Set portfolio inputs to begin</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">Current Value</div>
+        <div class="value smaller" id="currentValue">$0</div>
+        <div class="change" id="currentChange">From latest monthly entry</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">Total Return</div>
+        <div class="value smaller" id="totalReturn">—</div>
+        <div class="change" id="totalReturnSub">Awaiting data</div>
+      </div>
+      <div class="hero-stat">
+        <div class="label">Best Month</div>
+        <div class="value smaller" id="bestMonth">—</div>
+        <div class="change" id="bestMonthSub">Track months below</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="portfolios" id="portfoliosGrid"></div>
+
+    <div class="side-panel">
+      <div class="panel-head">
+        <div class="row">
+          <div class="panel-title">Holdings <em>Tape</em></div>
+          <div class="seg">
+            <button class="active" data-period="ytd">YTD</button>
+            <button data-period="2025">2025</button>
+            <button data-period="3y">3Y</button>
+          </div>
+        </div>
+      </div>
+      <div class="holdings" id="holdingsList"></div>
+    </div>
+  </div>
+
+  <div class="tracker">
+    <div class="tracker-head">
+      <h2>Monthly <em>Tracker</em></h2>
+      <div class="sub">Enter your portfolio value at month end · weighted returns calculate automatically</div>
+    </div>
+    <div class="tracker-portfolio-tabs" id="trackerTabs"></div>
+    <div class="month-grid" id="monthGrid"></div>
+    <div class="tracker-summary" id="trackerSummary"></div>
+  </div>
+
+  <div class="charts">
+    <div class="chart-card">
+      <h3>Portfolio <em>Trajectory</em></h3>
+      <div class="chart-sub">Monthly value over time · all portfolios overlaid</div>
+      <div class="chart-container"><canvas id="trajectoryChart"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <h3>Sector <em>Mix</em></h3>
+      <div class="chart-sub">Combined sector exposure across all portfolios</div>
+      <div class="chart-container"><canvas id="sectorChart"></canvas></div>
+    </div>
+  </div>
+
+  <footer>Built with <em>care</em> for Danish · Not financial advice · DYOR</footer>
+</div>
+
+<script>
+// ========== GLOBAL ERROR HANDLER ==========
+window.addEventListener('error', (e) => {
+  console.error('Caught error:', e.message, 'at', e.filename + ':' + e.lineno);
+  // Hide loader anyway so user sees something
+  const loader = document.getElementById('loadingState');
+  if (loader) loader.classList.add('hidden');
+});
+
+// ========== DATA ==========
+const portfolios = [
+  { id: 'bd', name: "B & D", label: "Fidelity", tint: 'tint-peach',
+    positions: [
+      { ticker: 'SPUS', desc: 'SP Funds S&P 500 Sharia', weight: 0.30 },
+      { ticker: 'SMH',  desc: 'VanEck Semiconductor ETF', weight: 0.30 },
+      { ticker: 'NVDA', desc: 'Nvidia Corporation', weight: 0.20 },
+      { ticker: 'AVGO', desc: 'Broadcom Inc', weight: 0.10 },
+      { ticker: 'UMMA', desc: 'Wahed DJ Islamic World', weight: 0.10 },
+    ]},
+  { id: 'keyaan', name: "Keyaan", label: "Fidelity · 50yr", tint: 'tint-mint',
+    positions: [
+      { ticker: 'SMH',  desc: 'VanEck Semiconductor ETF', weight: 0.25 },
+      { ticker: 'NVDA', desc: 'Nvidia Corporation', weight: 0.20 },
+      { ticker: 'SPUS', desc: 'SP Funds S&P 500 Sharia', weight: 0.20 },
+      { ticker: 'MU',   desc: 'Micron Technology', weight: 0.15 },
+      { ticker: 'AVGO', desc: 'Broadcom Inc', weight: 0.10 },
+      { ticker: 'TSM',  desc: 'Taiwan Semiconductor', weight: 0.10 },
+    ]},
+  { id: 'biopt', name: "BIOptimizers", label: "401k · locked", tint: 'tint-sky',
+    positions: [
+      { ticker: 'FXAIX', desc: 'Fidelity 500 Index Fund', weight: 1.00 },
+    ]},
+  { id: 'nn', name: "N & N", label: "Fidelity", tint: 'tint-lilac',
+    positions: [
+      { ticker: 'SPUS', desc: 'SP Funds S&P 500 Sharia', weight: 0.40 },
+      { ticker: 'SMH',  desc: 'VanEck Semiconductor ETF', weight: 0.25 },
+      { ticker: 'NVDA', desc: 'Nvidia Corporation', weight: 0.15 },
+      { ticker: 'UMMA', desc: 'Wahed DJ Islamic World', weight: 0.15 },
+      { ticker: 'AVGO', desc: 'Broadcom Inc', weight: 0.05 },
+    ]}
+];
+
+const returns = {
+  'SPUS':  { desc: 'Sharia S&P 500',     ytd: 0.0416, '2025': 0.1896, '3y': 0.1450 },
+  'UMMA':  { desc: 'Islamic World ETF',  ytd: 0.1061, '2025': 0.2525, '3y': 0.0552 },
+  'SMH':   { desc: 'Semiconductor ETF',  ytd: 0.2629, '2025': 0.4917, '3y': 0.5100 },
+  'NVDA':  { desc: 'Nvidia Corporation', ytd: 0.0815, '2025': 0.3892, '3y': 0.9428 },
+  'MU':    { desc: 'Micron Technology',  ytd: 0.5944, '2025': 2.4024, '3y': 0.8772 },
+  'AVGO':  { desc: 'Broadcom Inc',       ytd: 0.0850, '2025': 0.4100, '3y': 0.4305 },
+  'TSM':   { desc: 'Taiwan Semiconductor',ytd: 0.1000, '2025': 0.4200, '3y': 0.4500 },
+  'FXAIX': { desc: 'Fidelity 500 Index', ytd: 0.0411, '2025': 0.1642, '3y': 0.1180 },
+};
+const benchmarks = {
+  'SPY':    { desc: 'S&P 500 ETF', ytd: 0.0416, '2025': 0.1635, '3y': 0.1180, isBenchmark: true },
+  'NASDAQ': { desc: 'Nasdaq Comp.', ytd: 0.0619, '2025': 0.2036, '3y': 0.2150, isBenchmark: true },
+};
+
+const sectors = {
+  'SPUS':  'US Large Cap', 'UMMA': 'International', 'FXAIX': 'US Large Cap',
+  'SMH': 'Semiconductors', 'NVDA': 'Semiconductors', 'MU': 'Semiconductors',
+  'AVGO': 'Semiconductors', 'TSM': 'Semiconductors',
+};
+const sectorColors = {
+  'US Large Cap':    '#6ba4dc',
+  'International':   '#a085d4',
+  'Semiconductors':  '#ff9b6a',
+};
+
+const monthsList = [
+  { key: '2025-05', label: 'May 25' }, { key: '2025-06', label: 'Jun 25' },
+  { key: '2025-07', label: 'Jul 25' }, { key: '2025-08', label: 'Aug 25' },
+  { key: '2025-09', label: 'Sep 25' }, { key: '2025-10', label: 'Oct 25' },
+  { key: '2025-11', label: 'Nov 25' }, { key: '2025-12', label: 'Dec 25' },
+  { key: '2026-01', label: 'Jan 26' }, { key: '2026-02', label: 'Feb 26' },
+  { key: '2026-03', label: 'Mar 26' }, { key: '2026-04', label: 'Apr 26' },
+];
+
+// ========== STATE ==========
+const state = {
+  inputs: { bd: 0, keyaan: 0, biopt: 0, nn: 0 },
+  monthlyValues: { bd: {}, keyaan: {}, biopt: {}, nn: {} },
+  period: 'ytd',
+  trackerPortfolio: 'bd',
+};
+
+try {
+  const s = localStorage.getItem('danishV2');
+  if (s) {
+    const parsed = JSON.parse(s);
+    Object.assign(state, parsed);
+    // Ensure structure
+    if (!state.monthlyValues) state.monthlyValues = { bd: {}, keyaan: {}, biopt: {}, nn: {} };
+    portfolios.forEach(p => { if (!state.monthlyValues[p.id]) state.monthlyValues[p.id] = {}; });
+  }
+} catch(e) { console.warn('localStorage load failed:', e); }
+
+function save() {
+  try { localStorage.setItem('danishV2', JSON.stringify(state)); } catch(e) {}
+}
+
+// ========== UTILS ==========
+const fmt = {
+  cur: n => (!n || n === 0) ? '$0' : '$' + Math.round(n).toLocaleString('en-US'),
+  curd: n => '$' + (+n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+  pct: n => (n >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%',
+};
+
+// ========== EXPOSE FUNCTIONS GLOBALLY for inline handlers ==========
+// These get assigned at the end after definitions
+
+// ========== PORTFOLIO CARDS ==========
+function renderPortfolios() {
+  const grid = document.getElementById('portfoliosGrid');
+  grid.innerHTML = portfolios.map(p => {
+    const dollars = state.inputs[p.id] || 0;
+    const rows = p.positions.map(pos => {
+      const amount = dollars * pos.weight;
+      return `
+        <div class="prow">
+          <div>
+            <div class="ticker">${pos.ticker}</div>
+            <div class="desc">${pos.desc}</div>
+          </div>
+          <div class="pct">${(pos.weight * 100).toFixed(0)}%</div>
+          <div class="amt ${amount === 0 ? 'empty' : ''}">${amount === 0 ? '—' : fmt.curd(amount)}</div>
+        </div>`;
+    }).join('');
+    return `
+      <div class="pcard">
+        <div class="pcard-head ${p.tint}">
+          <div class="pcard-name"><em>${p.name}</em></div>
+          <div class="pcard-meta">${p.label}</div>
+        </div>
+        <div class="pcard-input">
+          <label>Initial Investment</label>
+          <input type="number" placeholder="0" value="${dollars || ''}" data-pid="${p.id}" class="initial-input">
+        </div>
+        <div class="ptable">${rows}</div>
+      </div>`;
+  }).join('');
+
+  // Attach listeners
+  document.querySelectorAll('.initial-input').forEach(input => {
+    input.addEventListener('input', e => {
+      setInput(e.target.dataset.pid, e.target.value);
+    });
+  });
+}
+
+function setInput(id, val) {
+  state.inputs[id] = parseFloat(val) || 0;
+  save();
+  renderPortfolios();
+  updateHero();
+  renderTrackerSummary();
+  if (window.Chart && window.__chartsReady) buildSectorChart();
+}
+
+// ========== HOLDINGS LIST ==========
+function renderHoldings() {
+  const list = document.getElementById('holdingsList');
+  const items = [
+    ...Object.entries(returns).map(([t, d]) => ({ ticker: t, ...d, isBenchmark: false })),
+    ...Object.entries(benchmarks).map(([t, d]) => ({ ticker: t, ...d, isBenchmark: true })),
+  ];
+  const period = state.period;
+  list.innerHTML = items.map(item => {
+    const v = item[period] || 0;
+    const v2 = item['2025'];
+    return `
+      <div class="hrow ${item.isBenchmark ? 'benchmark' : ''}">
+        <div>
+          <div class="ticker">${item.ticker}</div>
+          <div class="holding-desc">${item.desc}</div>
+        </div>
+        <div class="ret-cell ${v >= 0 ? '' : 'neg'}"><span class="badge">${fmt.pct(v)}</span></div>
+        <div class="ret-cell ${v2 >= 0 ? '' : 'neg'}"><span class="badge">${fmt.pct(v2)}</span></div>
+      </div>`;
+  }).join('');
+}
+
+function switchPeriod(p) {
+  state.period = p;
+  document.querySelectorAll('.seg button').forEach(b => {
+    b.classList.toggle('active', b.dataset.period === p);
+  });
+  renderHoldings();
+}
+
+// ========== HERO ==========
+function updateHero() {
+  const totalIn = Object.values(state.inputs).reduce((a, b) => a + b, 0);
+  document.getElementById('totalInvested').textContent = fmt.cur(totalIn);
+
+  let currentTotal = 0;
+  let hasMonthly = false;
+  portfolios.forEach(p => {
+    const monthly = state.monthlyValues[p.id] || {};
+    const entries = Object.entries(monthly).filter(([k, v]) => v > 0);
+    if (entries.length > 0) {
+      entries.sort((a, b) => a[0].localeCompare(b[0]));
+      currentTotal += parseFloat(entries[entries.length - 1][1]);
+      hasMonthly = true;
+    } else {
+      currentTotal += state.inputs[p.id] || 0;
+    }
+  });
+  document.getElementById('currentValue').textContent = fmt.cur(currentTotal);
+  document.getElementById('currentChange').textContent = hasMonthly ? 'From latest monthly entry' : 'No monthly data yet';
+
+  const ret = totalIn > 0 ? (currentTotal - totalIn) / totalIn : 0;
+  const retEl = document.getElementById('totalReturn');
+  if (totalIn > 0 && hasMonthly) {
+    retEl.innerHTML = `<em>${fmt.pct(ret)}</em>`;
+    retEl.style.color = ret >= 0 ? 'var(--mint-deep)' : 'var(--rose-deep)';
+    document.getElementById('totalReturnSub').innerHTML = `${fmt.cur(currentTotal - totalIn)} <span class="change-pill ${ret >= 0 ? '' : 'down'}">${ret >= 0 ? '↑' : '↓'} ${Math.abs(ret * 100).toFixed(1)}%</span>`;
+  } else {
+    retEl.innerHTML = '—';
+    retEl.style.color = '';
+    document.getElementById('totalReturnSub').textContent = totalIn === 0 ? 'Enter portfolio inputs first' : 'Add monthly values to track';
+  }
+
+  const monthChanges = computeMonthChanges();
+  if (monthChanges.length > 0) {
+    const best = monthChanges.reduce((a, b) => b.totalPct > a.totalPct ? b : a);
+    document.getElementById('bestMonth').innerHTML = `<em>${best.label}</em>`;
+    document.getElementById('bestMonthSub').textContent = `${fmt.pct(best.totalPct)} across all portfolios`;
+  } else {
+    document.getElementById('bestMonth').textContent = '—';
+    document.getElementById('bestMonthSub').textContent = 'Track months below';
+  }
+
+  const tcEl = document.getElementById('totalChange');
+  if (totalIn === 0) {
+    tcEl.textContent = 'Set portfolio inputs to begin';
+    tcEl.className = 'change';
+  } else {
+    tcEl.innerHTML = '<span class="change-pill">● Active</span>across 4 portfolios';
+    tcEl.className = 'change up';
+  }
+}
+
+function computeMonthChanges() {
+  const out = [];
+  for (let i = 1; i < monthsList.length; i++) {
+    const prev = monthsList[i - 1];
+    const cur = monthsList[i];
+    let totalPrev = 0, totalCur = 0, hasData = false;
+    portfolios.forEach(p => {
+      const m = state.monthlyValues[p.id] || {};
+      if (m[prev.key] > 0 && m[cur.key] > 0) {
+        totalPrev += parseFloat(m[prev.key]);
+        totalCur += parseFloat(m[cur.key]);
+        hasData = true;
+      }
+    });
+    if (hasData && totalPrev > 0) {
+      out.push({ label: cur.label, totalPct: (totalCur - totalPrev) / totalPrev });
+    }
+  }
+  return out;
+}
+
+// ========== TRACKER ==========
+function renderTracker() {
+  const tabs = document.getElementById('trackerTabs');
+  tabs.innerHTML = portfolios.map(p =>
+    `<button class="${state.trackerPortfolio === p.id ? 'active' : ''}" data-pid="${p.id}">${p.name}</button>`
+  ).join('');
+  tabs.querySelectorAll('button').forEach(b => {
+    b.addEventListener('click', () => setTrackerPortfolio(b.dataset.pid));
+  });
+
+  const grid = document.getElementById('monthGrid');
+  const mv = state.monthlyValues[state.trackerPortfolio] || {};
+
+  grid.innerHTML = monthsList.map((m, i) => {
+    const val = mv[m.key];
+    const prevVal = i > 0 ? mv[monthsList[i - 1].key] : null;
+    let changeTag = '';
+    if (val && prevVal && prevVal > 0) {
+      const pct = (val - prevVal) / prevVal;
+      const cls = pct >= 0 ? 'up' : 'down';
+      const arrow = pct >= 0 ? '↑' : '↓';
+      changeTag = `<div class="change-tag ${cls}">${arrow} ${fmt.pct(pct)}</div>`;
+    } else if (val) {
+      changeTag = `<div class="change-tag">starting</div>`;
+    }
+    return `
+      <div class="month-card ${val ? 'has-data' : ''}">
+        <div class="m-label">${m.label}</div>
+        <input type="number" placeholder="—" value="${val || ''}" data-mkey="${m.key}" class="month-input">
+        ${changeTag}
+      </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.month-input').forEach(input => {
+    input.addEventListener('input', e => setMonthValue(e.target.dataset.mkey, e.target.value));
+  });
+
+  renderTrackerSummary();
+}
+
+function setTrackerPortfolio(id) {
+  state.trackerPortfolio = id;
+  renderTracker();
+}
+
+function setMonthValue(key, val) {
+  if (!state.monthlyValues[state.trackerPortfolio]) state.monthlyValues[state.trackerPortfolio] = {};
+  const num = parseFloat(val) || 0;
+  if (num === 0) {
+    delete state.monthlyValues[state.trackerPortfolio][key];
+  } else {
+    state.monthlyValues[state.trackerPortfolio][key] = num;
+  }
+  save();
+  // Re-render only the affected piece, not the whole grid (preserves focus)
+  renderTrackerSummary();
+  updateHero();
+  if (window.Chart && window.__chartsReady) buildTrajectoryChart();
+}
+
+function renderTrackerSummary() {
+  const mv = state.monthlyValues[state.trackerPortfolio] || {};
+  const initial = state.inputs[state.trackerPortfolio] || 0;
+  const entries = Object.entries(mv).filter(([k, v]) => v > 0).sort((a, b) => a[0].localeCompare(b[0]));
+
+  let totalReturn = 0, latestVal = 0, peakVal = 0;
+  if (entries.length > 0 && initial > 0) {
+    latestVal = parseFloat(entries[entries.length - 1][1]);
+    totalReturn = (latestVal - initial) / initial;
+    peakVal = Math.max(...entries.map(e => parseFloat(e[1])));
+  }
+
+  document.getElementById('trackerSummary').innerHTML = `
+    <div class="ts-stat"><div class="l">Months Tracked</div><div class="v">${entries.length}</div></div>
+    <div class="ts-stat"><div class="l">Latest Value</div><div class="v">${latestVal > 0 ? fmt.cur(latestVal) : '—'}</div></div>
+    <div class="ts-stat"><div class="l">Total Return</div><div class="v ${totalReturn > 0 ? 'up' : totalReturn < 0 ? 'down' : ''}">${entries.length > 0 && initial > 0 ? fmt.pct(totalReturn) : '—'}</div></div>
+    <div class="ts-stat"><div class="l">Peak Value</div><div class="v">${peakVal > 0 ? fmt.cur(peakVal) : '—'}</div></div>
+  `;
+}
+
+// ========== EVENT WIRING ==========
+function wireUpEventHandlers() {
+  // Period segment in holdings panel
+  document.querySelectorAll('.seg button').forEach(b => {
+    b.addEventListener('click', () => switchPeriod(b.dataset.period));
+  });
+
+  // Export button
+  document.getElementById('exportBtn').addEventListener('click', exportData);
+}
+
+// ========== EXPORT ==========
+function exportData() {
+  const rows = [['Portfolio', 'Month', 'Value']];
+  portfolios.forEach(p => {
+    const mv = state.monthlyValues[p.id] || {};
+    monthsList.forEach(m => {
+      if (mv[m.key]) rows.push([p.name, m.label, mv[m.key]]);
+    });
+  });
+  rows.push([]);
+  rows.push(['Portfolio', 'Initial Investment']);
+  portfolios.forEach(p => {
+    if (state.inputs[p.id]) rows.push([p.name, state.inputs[p.id]]);
+  });
+
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `danish_portfolio_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// ========== RENDER STATIC CONTENT IMMEDIATELY ==========
+function initStatic() {
+  try {
+    renderPortfolios();
+    renderHoldings();
+    renderTracker();
+    updateHero();
+    wireUpEventHandlers();
+    // Hide loader as soon as static content is up
+    document.getElementById('loadingState').classList.add('hidden');
+  } catch (e) {
+    console.error('Static init error:', e);
+    document.getElementById('loadingState').classList.add('hidden');
+  }
+}
+
+// Run static init now (script is at end of body, DOM is ready)
+initStatic();
+
+// ========== LOAD CHART.JS LAZILY (after static content is up) ==========
+let trajChart, sectorChart;
+window.__chartsReady = false;
+
+function loadChartJs() {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js';
+    script.onload = () => resolve();
+    script.onerror = () => reject(new Error('Chart.js failed to load'));
+    document.head.appendChild(script);
+  });
+}
+
+function showChartFallback(canvasId, msg) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const fallback = document.createElement('div');
+  fallback.className = 'chart-fallback';
+  fallback.textContent = msg;
+  canvas.parentNode.replaceChild(fallback, canvas);
+}
+
+function buildTrajectoryChart() {
+  if (!window.Chart) return;
+  const canvas = document.getElementById('trajectoryChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (trajChart) trajChart.destroy();
+
+  const colors = ['#ff9b6a', '#5fc499', '#6ba4dc', '#a085d4'];
+  const datasets = portfolios.map((p, i) => {
+    const mv = state.monthlyValues[p.id] || {};
+    const data = monthsList.map(m => mv[m.key] ? parseFloat(mv[m.key]) : null);
+    return {
+      label: p.name, data,
+      borderColor: colors[i], backgroundColor: colors[i] + '20',
+      borderWidth: 3, tension: 0.4, fill: false, spanGaps: true,
+      pointRadius: 5, pointHoverRadius: 7,
+      pointBackgroundColor: colors[i], pointBorderColor: 'white', pointBorderWidth: 2,
+    };
+  });
+
+  trajChart = new Chart(ctx, {
+    type: 'line',
+    data: { labels: monthsList.map(m => m.label), datasets },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          position: 'top', align: 'end',
+          labels: {
+            usePointStyle: true, pointStyle: 'circle',
+            font: { family: 'DM Sans', size: 12, weight: '500' },
+            padding: 16, color: '#6b665e',
+          }
+        },
+        tooltip: {
+          backgroundColor: 'white', titleColor: '#1f1d1a', bodyColor: '#1f1d1a',
+          borderColor: 'rgba(31, 29, 26, 0.1)', borderWidth: 1,
+          padding: 14, cornerRadius: 12,
+          titleFont: { family: 'DM Sans', size: 13, weight: '600' },
+          bodyFont: { family: 'Geist Mono', size: 12 },
+          callbacks: { label: ctx => `${ctx.dataset.label}: ${fmt.cur(ctx.parsed.y)}` }
+        }
+      },
+      scales: {
+        y: {
+          ticks: {
+            color: '#9d978e', font: { family: 'Geist Mono', size: 11 },
+            callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v),
+          },
+          grid: { color: 'rgba(31, 29, 26, 0.04)' }
+        },
+        x: { ticks: { color: '#6b665e', font: { family: 'DM Sans', size: 11 } }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function buildSectorChart() {
+  if (!window.Chart) return;
+  const canvas = document.getElementById('sectorChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  if (sectorChart) sectorChart.destroy();
+
+  const totals = {};
+  const hasInputs = Object.values(state.inputs).some(v => v > 0);
+  portfolios.forEach(p => {
+    const dollars = hasInputs ? (state.inputs[p.id] || 0) : 1;
+    p.positions.forEach(pos => {
+      const sec = sectors[pos.ticker] || 'Other';
+      totals[sec] = (totals[sec] || 0) + dollars * pos.weight;
+    });
+  });
+
+  const labels = Object.keys(totals).filter(k => totals[k] > 0);
+  const data = labels.map(l => totals[l]);
+  const total = data.reduce((a, b) => a + b, 0);
+  if (total === 0) return;
+  const pcts = data.map(d => (d / total * 100));
+
+  sectorChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: pcts,
+        backgroundColor: labels.map(l => sectorColors[l] || '#ccc'),
+        borderColor: 'white', borderWidth: 4, hoverOffset: 12,
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false, cutout: '68%',
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            color: '#1f1d1a', font: { family: 'DM Sans', size: 12, weight: '500' },
+            padding: 16, usePointStyle: true, pointStyle: 'circle',
+            generateLabels: (chart) => {
+              const d = chart.data;
+              return d.labels.map((label, i) => ({
+                text: `${label}  ${d.datasets[0].data[i].toFixed(1)}%`,
+                fillStyle: d.datasets[0].backgroundColor[i],
+                strokeStyle: d.datasets[0].backgroundColor[i],
+                index: i,
+              }));
+            }
+          }
+        },
+        tooltip: {
+          backgroundColor: 'white', titleColor: '#1f1d1a', bodyColor: '#1f1d1a',
+          borderColor: 'rgba(31, 29, 26, 0.1)', borderWidth: 1,
+          padding: 14, cornerRadius: 12,
+          titleFont: { family: 'DM Sans', size: 13, weight: '600' },
+          bodyFont: { family: 'Geist Mono', size: 12 },
+        }
+      }
+    }
+  });
+}
+
+// Load Chart.js, then build charts
+loadChartJs()
+  .then(() => {
+    window.__chartsReady = true;
+    try {
+      buildTrajectoryChart();
+      buildSectorChart();
+    } catch (e) {
+      console.error('Chart build error:', e);
+    }
+  })
+  .catch(err => {
+    console.warn('Chart.js failed to load — showing fallback');
+    showChartFallback('trajectoryChart', 'Charts unavailable (offline?). The rest of your dashboard works fine.');
+    showChartFallback('sectorChart', 'Charts unavailable (offline?).');
+  });
+
+// Resize handler
+let resizeTimer;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    if (window.__chartsReady) {
+      buildTrajectoryChart();
+      buildSectorChart();
+    }
+  }, 200);
+});
+</script>
+</body>
+</html>
